@@ -1,6 +1,8 @@
 package prj5;
 
+import java.util.EmptyStackException;
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
 /**
@@ -27,14 +29,14 @@ public class LinkedListTest extends student.TestCase {
         list1 = new LinkedList<Song>();
         list2 = new LinkedList<Song>();
         exception = null;
-        song1  = new Song("Back to Back", "Drake", 2015, "Rap", 0);
+        song1 = new Song("Back to Back", "Drake", 2015, "Rap", 0);
         song2 = new Song("Hotel California", "Eagles", 1984, "Rock", 0);
         song3 = new Song("Facedown", "Red jumpsuit apparatus",
-        		2004, "Alternatine", 0);
+                2004, "Alternatine", 0);
         song4 = new Song("Hello", "Adele", 2015, "Pop", 0);
         song5 = new Song("R.I.C.O", "Meek Mill", 2015, "Rap", 0);
         song6 = new Song("End Of the Road", "Boys to Man",
-        		1991, "R'NB", 0);
+                1991, "R'NB", 0);
     }
 
     /**
@@ -158,6 +160,7 @@ public class LinkedListTest extends student.TestCase {
         assertEquals(list1.size(), 4);
         assertEquals(list1.remove(1), song5);
         assertEquals(list1.size(), 3);
+        assertEquals(list1.remove(3), song1);
 
         try {
             list1.remove(3);
@@ -303,7 +306,7 @@ public class LinkedListTest extends student.TestCase {
     public void testReverseIterator() {
         list1.add(song1);
         list1.add(song2);
-        Iterator<Song> listIterator = list1.Reverseiterator();
+        Iterator<Song> listIterator = list1.reverseIterator();
         assertEquals(listIterator.next(), song1);
         assertTrue(listIterator.hasNext());
         
@@ -322,9 +325,7 @@ public class LinkedListTest extends student.TestCase {
     /**
      * test sorting method
      */
-    public void testInsertionSort() {
-
-        
+    public void testInsertionSort() {        
         Type title = Type.TITLE;
         Type artist = Type.ARTIST;
         Type genre = Type.GENRE;
@@ -369,25 +370,104 @@ public class LinkedListTest extends student.TestCase {
         assertEquals(list2.getEntry(5), song5);
         assertEquals(list2.getEntry(6), song4);
         
+        
+        try {
+            list1.insertionSort(title);
+        } 
+        catch (Exception e) {
+            exception = e;
+        }
+        assertNotNull(exception);
+        assertTrue(exception instanceof EmptyStackException);
     }
     
-    /**
-     * Test to array method
-     
-    public void testToArray() {
-        Song [] array1 = list1.toArray();
-        list2.add(song1);
-        list2.add(song2);
-        list2.add(song3);
-        list2.add(song4);
-        list2.add(song5);
-        list2.add(song6);
-        Song[] array2 = list2.toArray();
+    /** 
+     * Test the FBIterator method. 
+     */
+    public void testlistIterator() {
+        list1.add(song1);
+        list1.add(song2);
+        list1.add(song3);
         
-        assertEquals(array1.length, 0);
+        ListIterator<Song> iter = list1.listIterator();
         
-        assertEquals(array2[1], song6);
+        assertEquals(iter.nextIndex(), 1);
+        assertEquals(iter.previousIndex(), 0);
         
+        assertFalse(iter.hasPrevious());
+        assertTrue(iter.hasNext());
+        
+        try {
+            iter.previous();
+        }
+        catch (Exception e) {
+            exception = e;
+        }
+        assertNotNull(exception);
+        assertTrue(exception instanceof NoSuchElementException);
+        
+        assertEquals(iter.next(), song3);
+        assertEquals(iter.nextIndex(), 2);
+        assertTrue(iter.hasPrevious());
+        assertEquals(iter.previousIndex(), 1);
+        assertTrue(iter.hasNext());
+        
+        assertEquals(iter.next(), song2);
+        assertTrue(iter.hasPrevious());
+        assertTrue(iter.hasNext());
+        
+        assertEquals(iter.next(), song1);
+        assertTrue(iter.hasPrevious());
+        assertFalse(iter.hasNext());
+        
+        try {
+            iter.next();
+        }
+        catch (Exception e) {
+            exception = e;
+        }
+        assertNotNull(exception);
+        assertTrue(exception instanceof NoSuchElementException);
+        
+        assertEquals(iter.previous(), song1); 
+        assertTrue(iter.hasPrevious());
+        assertTrue(iter.hasNext());        
+
+        assertEquals(iter.previous(), song2); 
+        assertTrue(iter.hasPrevious());
+        assertTrue(iter.hasNext());
+
+        assertEquals(iter.previous(), song3); 
+        assertFalse(iter.hasPrevious());
+        assertEquals(iter.previousIndex(), 0);
+        assertTrue(iter.hasNext());    
+        assertEquals(iter.nextIndex(), 1);
+        
+        try {
+            iter.remove();
+        }
+        catch (Exception e) {
+            exception = e;
+        }
+        assertNotNull(exception);
+        assertTrue(exception instanceof UnsupportedOperationException);
+        
+        try {
+            iter.add(song4);
+        }
+        catch (Exception e) {
+            exception = e;
+        }
+        assertNotNull(exception);
+        assertTrue(exception instanceof UnsupportedOperationException);
+        
+        try {
+            iter.set(song1);
+        }
+        catch (Exception e) {
+            exception = e;
+        }
+        assertNotNull(exception);
+        assertTrue(exception instanceof UnsupportedOperationException);
     }
-   */
 }

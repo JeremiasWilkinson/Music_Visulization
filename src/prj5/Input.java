@@ -5,22 +5,18 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
- * This class parses the given files to create student and song lists, 
+ * This class takes given files and creates lists of songs and students, 
  * and makes a new GUI. 
- * @author Edgar Han (edgarh) 
- * @version 2015.11.20 
+ * 
+ * @author Edgar Han (edgarh)
+ * @author Broulaye Doumbia (broulaye)
+ * @author Shannon Hsu (shsu) 
+ * @version 2015.11.30
  */
 public class Input {
 
     private static int totalSongs = 59;
 
-    /** 
-     * Create a list of students from the file. 
-     * @param inFile The file to parse from. 
-     * @param songList The list of songs to use.
-     * @return A list of students. 
-     * @throws FileNotFoundException if the file is not found. 
-     */
     public static StudentList parseFile(String inFile, SongList songList) {
         Scanner file;
         String[] tmp;
@@ -105,11 +101,6 @@ public class Input {
         return students;
     }
 
-    /** 
-     * Creates a list of songs from the file. 
-     * @param inFile The file to parse from.
-     * @return The list of songs. 
-     */
     public static SongList parseSongs(String inFile) {
         SongList songList = new SongList();
         Scanner file;
@@ -133,21 +124,17 @@ public class Input {
     
 
     /**
-     * Runs the program and creates a new GUI window.
-     * @param args
+     * Runs the program.
+     * @param inFile The
      * @throws FileNotFoundException
      */
     public static void main(String[] inFile) {
-        if (inFile.length > 0) {
-            SongList songList = parseSongs(inFile[1]);
-            //StudentList students = parseFile(inFile[0], songList);
-            //SongList.displayTest(students, "hobby");
-            //songList.displayTest(parseFile(inFile[0], parseSongs(inFile[1])), "hobby", "title");
-            songList.displayTest(parseFile(inFile[0], parseSongs(inFile[1])), "hobby", Type.GENRE);
-            songList.displayTest(parseFile(inFile[0], parseSongs(inFile[1])), "hobby", Type.TITLE);
-        } else {
-            System.out.println("Please add arguments.");
-        }
+    	SongList songList = parseSongs("SongList.csv");
+    	songList.displayTest(parseFile("MusicSurveyData.csv",
+    	parseSongs("SongList.csv")), "hobby", Type.GENRE);
+    	            songList.displayTest(parseFile("MusicSurveyData.csv",
+    	parseSongs("SongList.csv")), "hobby", Type.TITLE);
+    	            new GUISongWindow(songList,
+    	parseFile("MusicSurveyData.csv", parseSongs("SongList.csv")));
     }
-
 }

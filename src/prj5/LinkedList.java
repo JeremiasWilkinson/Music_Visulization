@@ -1,7 +1,9 @@
 package prj5;
 
 import java.util.Comparator;
+import java.util.EmptyStackException;
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
 
@@ -71,11 +73,11 @@ public class LinkedList<T extends
          * set the data of a node to a given
          * value by the user
          * @param other represent the given value
-         */
+         
         public void setData(T other) {
             data = other;
         }
-        
+        */
         /**
          * set the next Node a node to a given
          * node by the user
@@ -88,6 +90,7 @@ public class LinkedList<T extends
     
     
     private Node head;
+    @SuppressWarnings("unused")
     private Node tail;
     private int size;
     
@@ -126,8 +129,8 @@ public class LinkedList<T extends
      */
     public void add(int position, T newEntry) {
         if (newEntry == null) {
-            throw new IllegalArgumentException
-            ("Illegal value given to the node");
+            throw new IllegalArgumentException(
+                    "Illegal value given to the node");
         }
         if ((position >= 1) && (position <= size + 1)) {
             Node newNode = new Node(newEntry);
@@ -282,7 +285,7 @@ public class LinkedList<T extends
     /**
      * change the list to an array
      * @return an array representation of the list
-     */
+     
     public T[] toArray() {
         @SuppressWarnings("unchecked")
         T[] result = (T[])new Object[size];
@@ -295,7 +298,7 @@ public class LinkedList<T extends
         }
         return result;
     }
-     
+     */
     /**
      * get a string representation of the list
      * @return a string representation of the list
@@ -373,6 +376,10 @@ public class LinkedList<T extends
                 insertInOrder(nodeToInsert, type);
             }
         }
+        
+        else {
+            throw new EmptyStackException();
+        }
     }  
     
     @Override
@@ -389,9 +396,26 @@ public class LinkedList<T extends
      * @return an iterator to traverse the list in
      * reverse order
      */
-    public Iterator<T> Reverseiterator() {
+    public Iterator<T> reverseIterator() {
         return new RLinkedListIterator();
     }
+    
+    /** 
+     * Creates a new iterator that goes forwards and backwards. 
+     * @return ListIterator<T> object
+     
+    public ListIterator<T> fBIterator() {
+        return new FBIterator(); 
+    }
+    */
+    /** 
+     * Creates a new iterator that goes forwards and backwards. 
+     * @return an iterator that traverses the list forwards and backwards 
+     */
+    public ListIterator<T> listIterator() {
+        return new FBIterator(); 
+    }
+    
     
     /**
      * This inner class implements iterator to help user iterate through a List
@@ -433,10 +457,8 @@ public class LinkedList<T extends
                 throw new NoSuchElementException();
             }
         }
-
     }
-    
-    
+      
     private class RLinkedListIterator implements Iterator<T> {
 
         private Node nextNode;
@@ -446,13 +468,13 @@ public class LinkedList<T extends
          * constructor to instantiate an object of iterator
          */
         private RLinkedListIterator() {
-        	length = size;
+            length = size;
             nextNode = getNodeAt(length);
         }
 
         @Override
         /**
-         * determine if the list has another person
+         * determine if the list has another entry 
          */
         public boolean hasNext() {
             return length > 0;
@@ -460,7 +482,7 @@ public class LinkedList<T extends
 
         @Override
         /**
-         * advance to the next person in the list
+         * advance to the next entry in the list
          */
         public T next() {
             if (hasNext()) {
@@ -472,8 +494,136 @@ public class LinkedList<T extends
             else {
                 throw new NoSuchElementException();
             }
-        }
-        
+        }        
     }
     
+    /** 
+     * This iterator traverses the list both forwards and backwards. 
+     * @author Shannon Hsu (shsu)
+     * @version 2015.11.30
+     */
+    private class FBIterator implements ListIterator<T> {
+        private Node nextNode; 
+        private Node prevNode; 
+        private int nextIndex; 
+        private int prevIndex; 
+
+        /** 
+         * Creates a new iterator. 
+         */
+        private FBIterator() {
+            nextNode = head; 
+            prevNode = null; 
+            nextIndex = 1; 
+            prevIndex = 0; 
+        }
+
+        /** 
+         * Determines if there is another entry in the list. 
+         * @return True if there is another entry, false otherwise. 
+         */
+        public boolean hasNext() {
+            return nextNode != null;
+        }
+
+        /** 
+         * Returns the next entry and moves the iterator forward. 
+         * @return The next entry. 
+         */
+        public T next() {
+            if (hasNext()) {                
+                Node returned = getNodeAt(nextIndex); 
+                prevNode = returned; 
+                nextNode = returned.getNext(); 
+                nextIndex++; 
+                prevIndex++; 
+                return returned.getData();
+            }
+            else {
+                throw new NoSuchElementException(); 
+            }
+        }
+
+        /** 
+         * Determines if there is a previous entry in the list. 
+         * @return True if there is a previous entry, false otherwise. 
+         */
+        public boolean hasPrevious() {
+            //return prevIndex > 0;  
+            return prevNode != null; 
+        }
+
+        /** 
+         * Returns the previous entry and moves the iterator backwards. 
+         * @return The previous entry. 
+         */
+        public T previous() {
+            if (hasPrevious()) {
+                Node returned = getNodeAt(prevIndex);
+                nextNode = returned; 
+                prevIndex--;   
+                nextIndex--; 
+                prevNode = getNodeAt(prevIndex); 
+                if (nextIndex == 1) {
+                    prevNode = null; 
+                }
+                return returned.getData();
+            }
+            else {
+                throw new NoSuchElementException(); 
+            }
+        }
+
+        /** 
+         * Returns the index of the next entry. 
+         * @return The index of the next entry. 
+         */
+        public int nextIndex() {
+            return nextIndex; 
+        }
+
+        /** 
+         * Returns the index of the previous entry. 
+         * @return The index of the previous entry. 
+         */
+        public int previousIndex() {
+            return prevIndex; 
+        }
+
+        /** 
+         * Removes the next entry.
+         * @throws UnsupportedOperationException
+         * because the method is not supported by the list. 
+         */
+        public void remove() {
+            throw new UnsupportedOperationException("This method"
+                    + " is not supported.");            
+        }
+
+        /** 
+         * Sets the next entry. 
+         * @throws UnsupportedOperationException
+         * because the method is not supported 
+         * by the list. 
+         * @param obj represent nothing because
+         * the method is not supported
+         */
+        public void set(T obj) {
+            throw new UnsupportedOperationException("This method"
+                    + " is not supported.");            
+        }
+        
+        /** 
+         * Adds a new entry. 
+         * @throws UnsupportedOperationException
+         * because the method is not supported 
+         * by the list.
+         * @param obj doesn't represent anything
+         * because the method is not supported
+         */
+        public void add(T obj) {
+            throw new UnsupportedOperationException("This"
+                    + " method is not supported.");            
+        }
+    }     
 } // end class

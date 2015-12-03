@@ -41,10 +41,11 @@ public class Student implements Comparator<Object> {
     }
     
     /**
-     * constrotor create a student
-     * @param m represent major
-     * @param r represent region
-     * @param h represent hobby
+     * constructor that set the value of major
+     * region and hobby
+     * @param m represent new major
+     * @param r represent new region
+     * @param h represent new hobby
      */
     public Student(String m, String r, String h) {
         major = m;
@@ -97,7 +98,7 @@ public class Student implements Comparator<Object> {
     /**
      * set the major parameter to a new one provided
      * @param newMajor represent the new hobby
-      */
+     */
     public void setMajor(String newMajor) {
         major = newMajor;
     }
@@ -172,36 +173,23 @@ public class Student implements Comparator<Object> {
             return false;
         }
         else {
-            Student newPerson = (Student)obj;
-            if (newPerson.major.equals(this.major)) {
-                if (newPerson.hobby.equals(this.hobby)) {
-                    if (newPerson.region.equals(this.region)) {
-                        return true;
-                    }
-                    else {
-                        return false;
-                    }
-                }
-                else {
-                    return false;
-                }
-            }
-            else {
-                return false;
-            }
+            Student newPerson = (Student)obj; 
+            return newPerson.region.equals(this.region) && 
+                    (newPerson.hobby.equals(this.hobby)) && 
+                    newPerson.major.equals(this.major);
         }
+        
     }
 
     @Override
     /**
-     * This compare method is not used 
-     * it's just here for display
-     * @param o1 represent first object
-     * @param o2 represent second object
-     * @return 0;
+     * This method throw an exception because it should not
+     * be called because it's not supported
+     * @param obj1 represent student
+     * @param obj2 represent type
      */
-    public int compare(Object o1, Object o2) {
-        return 0;
+    public int compare(Object obj1, Object obj2) {
+        throw new UnsupportedOperationException();
     }
-
+    
 }
